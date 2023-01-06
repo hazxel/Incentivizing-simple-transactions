@@ -45,7 +45,7 @@ def simplify(players, original_tx, tx_risk, gas_price):
                     start = j+1
             full_split.append(original_tx[i][start:tx_len])
 
-            if (full_split == []):
+            if (not full_split):
                 continue
 
             left = full_split[0]

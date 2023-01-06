@@ -20,12 +20,11 @@ if __name__ == '__main__':
     for _ in range(rounds):
         original_tx, tx_risk = tx.generate_transactions(players, shared_obj_num, uniquely_owned_obj_num)
         simplified_tx = player.simplify(players, original_tx, tx_risk, gas_price)
-        original_exec_time.append(skdr.schedule(original_tx, shared_obj_num, uniquely_owned_obj_num))
-        simplified_exec_time.append(skdr.schedule(simplified_tx, shared_obj_num, uniquely_owned_obj_num))
+        original_exec_time.append(skdr.schedule(original_tx, shared_obj_num))
+        simplified_exec_time.append(skdr.schedule(simplified_tx, shared_obj_num))
         gas_price = gas.next_block_gas(simplified_tx, shared_obj_num) 
 
     # plot
-
-    print(gas_price)
+    print(len(original_tx), len(simplified_tx))
     print(original_exec_time)
     print(simplified_exec_time)
