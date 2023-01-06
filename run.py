@@ -10,7 +10,6 @@ player_num = 100                # every player has one tx each round
 
 
 if __name__ == '__main__':
-    # uniquely_owned_objcets, shared_objects = object.generate_objects(uniquely_owned_obj_num, shared_obj_num)
     players = player.generate_player(player_num)
     gas_price = gas.init_gas_price(shared_obj_num)
 
@@ -25,6 +24,5 @@ if __name__ == '__main__':
         gas_price = gas.next_block_gas(simplified_tx, shared_obj_num) 
 
     # plot
-    print(len(original_tx), len(simplified_tx))
     print(original_exec_time)
     print(simplified_exec_time)
