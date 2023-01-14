@@ -1,8 +1,8 @@
-BASE_GAS = 1
+BASE_GAS = 1.0
 ADD_GAS = 100.0
 
 def init_gas_price(shared_obj_num):
-    return [BASE_GAS] * shared_obj_num
+    return [BASE_GAS + ADD_GAS / shared_obj_num] * shared_obj_num
 
 def calc_saved_gas(left, right, gas_price):
     shared_obj_num = len(gas_price)

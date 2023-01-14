@@ -1,5 +1,5 @@
 import random
-import player
+from player import Player
 
 TX_OTS_SIZE_MIN = 5
 TX_OTS_SIZE_MAX = 20
@@ -10,20 +10,20 @@ def generate_transactions(players, shared_obj_num, uniquely_owned_obj_num):
     risks = []
 
     for p in players:
-        if p == player.PLAYER_TYPE_NAIVE:
-            txs.append([random.randrange(1, uniquely_owned_obj_num), random.randrange(1, uniquely_owned_obj_num)])
-            risks.append([])
-        elif p == player.PLAYER_TYPE_TRADER:
-            txs.append([random.randrange(1, uniquely_owned_obj_num), random.randrange(1, uniquely_owned_obj_num)])
-            risks.append([])
-        elif p == player.PLAYER_TYPE_OTS_BEST or p == player.PLAYER_TYPE_OTS_WORST or p == player.PLAYER_TYPE_OTS_EXP:
-            t, r = generate_random_ots_tx(shared_obj_num, uniquely_owned_obj_num)
-            txs.append(t)
-            risks.append(r)
-        else:
-            txs.append([])
-            risks.append([])
-    
+        match p:
+            case Player.NAIVE:
+                txs.append([random.randrange(1, uniquely_owned_obj_num), random.randrange(1, uniquely_owned_obj_num)])
+                risks.append([])
+            case Player.TRADER:
+                txs.append([random.randrange(1, uniquely_owned_obj_num), random.randrange(1, uniquely_owned_obj_num)])
+                risks.append([])
+            case Player.OTS_BEST | Player.OTS_EXP | Player.OTS_WORST:
+                t, r = generate_random_ots_tx(shared_obj_num, uniquely_owned_obj_num)
+                txs.append(t)
+                risks.append(r)
+            case _:
+                txs.append([])
+                risks.append([])
     return txs, risks
 
 def generate_random_ots_tx(shared_obj_num, uniquely_owned_obj_num):
