@@ -1,8 +1,8 @@
 import random
 from player import Player
 
-TX_OTS_SIZE_MIN = 5
-TX_OTS_SIZE_MAX = 20
+TX_OTS_SIZE_MIN = 8
+TX_OTS_SIZE_MAX = 16
 
 
 def generate_transactions(players, shared_obj_num, uniquely_owned_obj_num):

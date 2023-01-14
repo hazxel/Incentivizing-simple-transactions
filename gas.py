@@ -4,6 +4,18 @@ ADD_GAS = 100.0
 def init_gas_price(shared_obj_num):
     return [BASE_GAS + ADD_GAS / shared_obj_num] * shared_obj_num
 
+def calc_gas(tx, gas_price):
+    shared_obj_num = len(gas_price)
+    tx_len = len(tx)
+    price = 0
+    set_obj = set()
+    for obj in tx:
+        if obj > shared_obj_num or obj in set_obj:
+            continue
+        price += gas_price[obj-1] * tx_len
+        set_obj.add(obj)
+    return price
+
 def calc_saved_gas(left, right, gas_price):
     shared_obj_num = len(gas_price)
     saved = 0
