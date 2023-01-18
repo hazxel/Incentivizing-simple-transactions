@@ -12,7 +12,7 @@ class Player(Enum):
 
 NUMBER_OF_PLAYER_TYPES = 5
 
-UTILITY_SUCC = 100
+UTILITY_SUCC = 900
 UTILITY_FAIL = 0
 
 # randomly generate players
@@ -20,7 +20,7 @@ def generate_player(n):
     players = []
     for _ in range(n):
         players.append(Player.OTS_EXP)
-        # players.append(random.choice(list(Player)))
+        #players.append(random.choice(list(Player)))
     return players
 
 def dummy_simplify(original_tx, gas_price):
@@ -74,13 +74,11 @@ def simplify(players, original_tx, tx_risk, gas_price):
                 full_split.pop()
 
                 for fs in full_split:
-                    left = fs[0]
-                    interval = len(left) - 1
+                    interval = len(fs[0]) - 1
                     b = 0
                     for j in range(1,len(fs)):
-                        right = fs[j]
-                        b += gas.calc_saved_gas(left, right, gas_price) - (UTILITY_SUCC - UTILITY_FAIL) * tx_risk[i][interval]
-                        interval += len(right)
+                        b += gas.calc_saved_gas(fs[j-1], fs[j], gas_price) - (UTILITY_SUCC - UTILITY_FAIL) * tx_risk[i][interval]
+                        interval += len(fs[j])
 
                     if benefit < b:
                         benefit = b
@@ -96,35 +94,7 @@ def simplify(players, original_tx, tx_risk, gas_price):
                 #     print(gas_fee)
                 #     print("util: ")
                 #     print(UTILITY_SUCC + benefit)
-                
-                
-                # tx_len = len(original_tx[i])
-
-                # full_split = []
-                # start = 0
-                # for j in range(tx_len-1):
-                #     if tx_risk[i][j] < 1:
-                #         full_split.append(original_tx[i][start:j+1])
-                #         start = j+1
-
-                # full_split.append(original_tx[i][start:tx_len])
-
-                # left = full_split[0]
-                # interval = len(left) - 1
-                # for j in range(1, len(full_split)):
-                #     right = full_split[j]
-                #     saved_gas = gas.calc_saved_gas(left, right, gas_price)
-                #     # compare exp of splitting
-                #     if saved_gas > (UTILITY_SUCC - UTILITY_FAIL) * tx_risk[i][interval]:
-                #         # split
-                #         new_tx.append(left)
-                #         left = right
-                #     else:
-                #         # not split
-                #         left = left + right
-                #     interval += len(right)
-                
-                # new_tx.append(left)
+                #     print(len(split))
             case _:
                 new_tx.append(original_tx[i])
     return new_tx
