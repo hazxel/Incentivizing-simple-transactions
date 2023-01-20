@@ -16,17 +16,28 @@ UTILITY_SUCC = 900
 UTILITY_FAIL = 0
 
 # randomly generate players
-def generate_player(n):
+def generate_ots_player(n):
+    return generate_mixed_player(n)
+
+def generate_mixed_player(n, ots_portion = 1.0):
     players = []
     for _ in range(n):
-        players.append(Player.OTS_EXP)
-        #players.append(random.choice(list(Player)))
+        if (random.random() > ots_portion): 
+            players.append(Player.NAIVE)
+        else:
+            players.append(Player.OTS_EXP)
     return players
 
-def dummy_simplify(original_tx, gas_price):
+def generate_rand_player(n):
+    players = []
+    for _ in range(n):
+        players.append(random.choice(list(Player)))
+    return players
+
+def dummy_simplify(original_tx):
     new_tx = []
     for tx in original_tx:
-        gas_fee = gas.calc_gas(tx, gas_price)
+        gas_fee = gas.calc_gas_old(tx)
         if UTILITY_SUCC > gas_fee:
             new_tx.append(tx)
     return new_tx

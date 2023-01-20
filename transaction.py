@@ -3,6 +3,7 @@ from player import Player
 
 TX_OTS_SIZE_MIN = 8
 TX_OTS_SIZE_MAX = 20
+TYPICAL_TX_LEN = 10
 
 HOT_OBJ_PORTION = 0.1
 POSSIBILITY_CHOOSE_FROM_HOT = 0.5
@@ -15,7 +16,8 @@ def generate_transactions(players, shared_obj_num, uniquely_owned_obj_num, hot_o
     for p in players:
         match p:
             case Player.NAIVE:
-                txs.append([random.randrange(1, uniquely_owned_obj_num), random.randrange(1, uniquely_owned_obj_num)])
+                t, _ = generate_random_ots_tx(shared_obj_num, uniquely_owned_obj_num, hot_obj_num)
+                txs.append(t)
                 risks.append([])
             case Player.TRADER:
                 txs.append([random.randrange(1, uniquely_owned_obj_num), random.randrange(1, uniquely_owned_obj_num)])

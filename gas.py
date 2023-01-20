@@ -1,9 +1,13 @@
 BASE_GAS = 1.0
 ADD_GAS = 100.0
+OLD_GAS = 20.0
 UPDATE_ALPHA = 0.1
 
 def init_gas_price(shared_obj_num):
     return [BASE_GAS + ADD_GAS / shared_obj_num] * shared_obj_num
+
+def calc_gas_old(tx):
+    return OLD_GAS * len(tx)
 
 def calc_gas(tx, gas_price):
     shared_obj_num = len(gas_price)
@@ -45,7 +49,6 @@ def calc_saved_gas(left, right, gas_price):
     return saved
 
 
-
 def next_block_gas(previous_gas_price, simplified_tx, shared_obj_num):
     load = [0] * shared_obj_num
     for tx in simplified_tx:
@@ -62,3 +65,12 @@ def next_block_gas(previous_gas_price, simplified_tx, shared_obj_num):
         return previous_gas_price
     new_price = [BASE_GAS + ADD_GAS * l / load_total for l in load]
     return [UPDATE_ALPHA * previous_gas_price[i] + (1-UPDATE_ALPHA) * new_price[i] for i in range(len(load))]
+
+
+def calc_typical_gas(tx, gas):
+    prices = []
+    for t in tx:
+        prices.append(calc_gas(t, gas))
+
+    return prices
+    
