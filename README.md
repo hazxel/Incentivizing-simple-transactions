@@ -1,5 +1,6 @@
-# incentivizing-simple-transactions
+# Incentivizing Simple Transactions
 
+### Introduction
 The inception of Bitcoin marked the creation of the first fully decentralized cryp-
 tocurrency relying on blockchain technology and electrified the world with its
 potential. Since then, various blockchains have emerged. Ethereum is of partic-
