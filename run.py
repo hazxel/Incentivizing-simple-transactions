@@ -24,16 +24,23 @@ def run_with_OTS(ots_portion):
     simplified_throughput = []
 
     typical_tx_price = []
+    original_operations = []
+    simplified_operations = []
 
     for i in range(rounds):
         original_throughput.append([])
         simplified_throughput.append([])
+        original_total_op = []
+        simplified_total_op = []
 
         for _ in range(samples):
             original_tx, tx_risk = tx.generate_transactions(players, shared_obj_num, uniquely_owned_obj_num, hot_objects)
             
             simplified_tx = player.simplify(players, original_tx, tx_risk, gas_price)
             original_tx = player.dummy_simplify(original_tx)
+
+            original_total_op.append(sum([len(tx) for tx in original_tx]))
+            simplified_total_op.append(sum([len(tx) for tx in simplified_tx]))
             
             original_exec_time.append(skdr.schedule(original_tx, shared_obj_num))
             simplified_exec_time.append(skdr.schedule(simplified_tx, shared_obj_num))
@@ -45,7 +52,10 @@ def run_with_OTS(ots_portion):
         
         gas_price = gas.next_block_gas(gas_price, simplified_tx, shared_obj_num)
 
-    return original_throughput, simplified_throughput, typical_tx_price
+        original_operations.append(original_total_op)
+        simplified_operations.append(simplified_total_op)
+
+    return original_throughput, simplified_throughput, typical_tx_price, original_operations, simplified_operations
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
@@ -54,18 +64,19 @@ if __name__ == '__main__':
     
     match sys.argv[1]:
         case "single":
-            original_throughput, simplified_throughput, typical_tx_price = run_with_OTS(1)
+            original_throughput, simplified_throughput, typical_tx_price, _, _ = run_with_OTS(1)
             plot.plot_single(original_throughput, simplified_throughput)
             print(sum(typical_tx_price) / len(typical_tx_price)) # we need this to be equal to un-simplified tx with same length
         case "scan":
             original_throughput = []
             simplified_throughput = []
             for ots_portion in np.arange(0, 1.0001, 0.05):
-                o, s, _ = run_with_OTS(ots_portion)
+                o, s, _, _, _ = run_with_OTS(ots_portion)
                 original_throughput.append(o)
                 simplified_throughput.append(s)
             plot.plot_scan(original_throughput, simplified_throughput)
         case "operation":
-            pass
+            _, _, _, original_op, simplified_op = run_with_OTS(1)
+            plot.plot_operation(original_op, simplified_op)
         case _:
             print("valid modes are single, scan and operation!")
